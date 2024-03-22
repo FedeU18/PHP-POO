@@ -1,20 +1,78 @@
 <?php
 
-class Calculatora {
-  public function __construct() {}
-  
-  public function suma($a,$b){
-    return $a + $b;
+class Calculadora
+{
+  private $x;
+  private $y;
+
+  public function __construct($x, $y)
+  {
+    $this->x = $x;
+    $this->y = $y;
   }
-  public function resta($a,$b){
-    return $a - $b;
+
+  //getters
+  public function getFirstNumber()
+  {
+    return $this->x;
   }
-  public function multiplicacion($a,$b){
-    return $a * $b;
+  public function getSecondNumber()
+  {
+    return $this->y;
   }
-  public function division($a,$b){
-    return $a / $b;
+
+  //setters
+  public function setFirstNumber($newNumber)
+  {
+    return $this->x = $newNumber;
   }
-  public function __toString(){}
-  public function __destruct(){}
+  public function setSecondNumber($newNumber)
+  {
+    return $this->y = $newNumber;
+  }
+  /**
+   * suma los 2 números
+   */
+  public function suma()
+  {
+    return $this->getFirstNumber() + $this->getSecondNumber();
+  }
+  /**
+   * resta los 2 números
+   */
+  public function resta()
+  {
+    return $this->getFirstNumber() - $this->getSecondNumber();
+  }
+  /**
+   * multiplica los 2 números
+   */
+  public function multiplicacion()
+  {
+    return $this->getFirstNumber() * $this->getSecondNumber();
+  }
+  /**
+   * divide los 2 números
+   */
+  public function division()
+  {
+    return $this->getFirstNumber() / $this->getSecondNumber();
+  }
+
+  public function __toString()
+  {
+    return "Los números son " . $this->getFirstNumber() . " y " . $this->getSecondNumber() . "\n";
+  }
+  public function __destruct()
+  {
+    echo $this . " instancia destruida, no hay referencias a este objeto \n";
+  }
 }
+
+
+$p = new Calculadora(1, 5);
+
+echo $p->suma() . "\n";
+echo $p->resta() . "\n";
+echo $p->multiplicacion() . "\n";
+echo $p->division() . "\n";

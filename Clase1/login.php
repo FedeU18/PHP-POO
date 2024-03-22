@@ -2,50 +2,77 @@
 
 //Enunciado:
 /*
-Implementar una clase Login que almacene el nombreUsuario, contraseña, frase que permite
-recordar la contraseña ingresada y las ultimas 4 contraseñas utilizadas.
-Implementar un método que permita validar una contraseña con la almacenada
-un método para cambiar la contraseña actual por otra nueva
-el sistema deja cambiar la contraseña siempre y cuando esta no haya sido usada recientemente (es
+Implementar una clase Login que almacene el nombreUsuario, Clave, frase que permite
+recordar la Clave ingresada y las ultimas 4 Claves utilizadas.
+Implementar un método que permita validar una Clave con la almacenada
+un método para cambiar la Clave actual por otra nueva
+el sistema deja cambiar la Clave siempre y cuando esta no haya sido usada recientemente (es
 decir no se encuentra dentro de las cuatro almacenadas).
-Implementar el método recordar que dado el usuario, muestra la frase que permite recordar su contraseña
+Implementar el método recordar que dado el usuario, muestra la frase que permite recordar su Clave
 */
-class Login {
-  private $nombreUsuario;
-  private $contrasena;
-  private $frase;
 
-  public function __construct($nombre, $contra) {
-    $this->nombreUsuario = $nombre;
-    $this->contrasena = $contra;
-    $this->frase = $contra;
+class Login
+{
+  private $usuario = [];
+
+  public function __construct($nombre, $clave, $frase)
+  {
+    $this->usuario = [
+      "nombre" => $nombre,
+      "clave" => [$clave],
+      "frase" => $frase
+    ];
   }
-//getters
-  public function getNombre(){
-    return $this->nombreUsuario;
+
+  //getter
+  public function getUsuario()
+  {
+    return $this->usuario;
   }
-  public function getContrasena(){
-    return $this->contrasena;
+
+  //setters
+  public function setNombreUsuario($nuevoNombre)
+  {
+    $this->usuario["nombre"] = $nuevoNombre;
   }
-  public function getFrase(){
-    return $this->frase;
+  public function setClaveUsuario($nuevaClave)
+  {
+    array_unshift($this->usuario["clave"], $nuevaClave);
   }
-//setters
-  public function setContrasena($nuevaContra){
-    $this->frase = $this->frase . " " . $nuevaContra;
-    return $this->contrasena = $nuevaContra;
+  public function setFraseUsuario($nuevaFrase)
+  {
+    array_unshift($this->usuario["frase"], $nuevaFrase);
   }
-//métodos
-  public function validarContrasena($intentoContra){
-    if($intentoContra == $this->contrasena){
-      echo "contraseña correcta \n";
-    } else {
-      echo "contraseña incorrecta \n";
+
+  //metodos
+  public function validarClave($intento)
+  {
+    return $this->getUsuario()["clave"][0] == $intento;
+  }
+
+  public function nuevaClave($nuevaClave)
+  {
+    array_unshift($this->getUsuario()["clave"], $nuevaClave);
+    if (count($this->getUsuario()["clave"]) == 5) {
+      array_pop($this->getUsuario()["clave"]);
     }
   }
 
-
-  public function __toString(){}
-  public function __destruct(){}
-
+  public function __toString()
+  {
+    return "El usuario " . $this->getUsuario()["nombre"] . " su última Clave es: "
+      . $this->getUsuario()["clave"][0]
+      . ", y su frase de recuperación es "
+      . "'" . $this->getUsuario()["frase"]
+      . "'\n";
+  }
+  public function __destruct()
+  {
+    echo "el usuario explotó";
+  }
 }
+
+
+$objUsuario = new Login("Fede", "1234", "esta es la frase de recuperación");
+
+$validar = $objUsuario->validarClave("1234");
