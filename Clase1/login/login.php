@@ -14,6 +14,7 @@ Implementar el método recordar que dado el usuario, muestra la frase que permit
 class Login
 {
   private $usuario = [];
+  private $logeado;
 
   public function __construct($nombre, $clave, $frase)
   {
@@ -22,12 +23,17 @@ class Login
       "clave" => [$clave],
       "frase" => $frase
     ];
+    $this->logeado = false;
   }
 
   //getter
   public function getUsuario()
   {
     return $this->usuario;
+  }
+  public function getLogeado()
+  {
+    return $this->logeado;
   }
 
   //setters
@@ -41,38 +47,51 @@ class Login
   }
   public function setFraseUsuario($nuevaFrase)
   {
-    array_unshift($this->usuario["frase"], $nuevaFrase);
+    $this->usuario["frase"] = $nuevaFrase;
   }
-
+  public function setLogeado()
+  {
+    $this->logeado = !$this->logeado;
+  }
   //metodos
   public function validarClave($intento)
   {
-    return $this->getUsuario()["clave"][0] == $intento;
+    $mensaje = "";
+    if ($this->getUsuario()["clave"][0] == $intento) {
+      $mensaje = "Logeado correctamente \n";
+      $this->setLogeado();
+    } else {
+      $mensaje = "Clave incorrecta, " . $this->recordar() . "\n";
+    }
+    return $mensaje;
   }
 
   public function nuevaClave($nuevaClave)
   {
-    array_unshift($this->getUsuario()["clave"], $nuevaClave);
-    if (count($this->getUsuario()["clave"]) == 5) {
-      array_pop($this->getUsuario()["clave"]);
+    $mensaje = "";
+    if (in_array($nuevaClave, $this->getUsuario()["clave"])) {
+      array_unshift($this->getUsuario()["clave"], $nuevaClave);
+      if (count($this->getUsuario()["clave"]) == 5) {
+        array_pop($this->getUsuario()["clave"]);
+      }
+      $mensaje = "Contraseña cambiada correctamente\n";
+    } else {
+      $mensaje = "La nueva contraseña no puede ser una que haya sido usada recientemente\n";
     }
+    return $mensaje;
+  }
+  public function recordar()
+  {
+    $mensaje = "la frase para recordar la contraseña es: " . $this->getUsuario()["frase"];
+    echo $mensaje;
   }
 
   public function __toString()
   {
-    return "El usuario " . $this->getUsuario()["nombre"] . " su última Clave es: "
-      . $this->getUsuario()["clave"][0]
-      . ", y su frase de recuperación es "
-      . "'" . $this->getUsuario()["frase"]
-      . "'\n";
+    return "Usuario: " . $this->getUsuario()["nombre"];
   }
   public function __destruct()
   {
     echo "el usuario explotó";
   }
 }
-
-
-$objUsuario = new Login("Fede", "1234", "esta es la frase de recuperación");
-
-$validar = $objUsuario->validarClave("1234");
